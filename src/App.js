@@ -7,18 +7,22 @@ import Cart from './pages/Cart';
 import { useState } from 'react';
 import { createContext } from 'react';
 
-const SearchContext = createContext()
+export const SearchContext = createContext()
 
 function App() {
 
 	const [searchValue, setSearchValue] = useState('')
 	return (
 		<div className='wrapper'>
-			<SearchContext.Provider value={{searchValue, setSearchValue}}> {/* комонент провайдер у объекта контекста, помещаем сюда все что нам нужно глобально */}
-				<Header searchValue={searchValue} setSearchValue={setSearchValue} />
+			<SearchContext.Provider value={{ searchValue, setSearchValue }}>
+				{' '}
+				<Header />{' '}
+				{/* комонент провайдер у объекта контекста, помещаем сюда все что нам нужно глобально */}
+				{/* searchValue={searchValue} setSearchValue={setSearchValue} */}
+				{/* теперь не передаем сюда эти пропсы, потом вытянем их из контекста */}
 				<div className='content'>
 					<Routes>
-						<Route path='/' element={<Home searchValue={searchValue} />} />
+						<Route path='/' element={<Home /* searchValue={searchValue} */ />} />
 						<Route path='/cart' element={<Cart />} />
 						<Route path='*' element={<NotFound />} />
 					</Routes>
