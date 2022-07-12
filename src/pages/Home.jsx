@@ -4,6 +4,7 @@ import PizzaBlock from '../components/PizzaBlock/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Sort from '../components/Sort';
 
+import Pagination from '../components/Pagination/Pagination';
 import '../scss/app.scss';
 
 const Home = ({ searchValue }) => {
@@ -15,6 +16,7 @@ const Home = ({ searchValue }) => {
 		sort: 'rating',
 		order: 'desc',
 	});
+	const [currentPage, setCurrentPage] = useState(1);
 
 	const search = searchValue ? searchValue : '';
 
@@ -23,7 +25,9 @@ const Home = ({ searchValue }) => {
 		fetch(
 			`https://62cac4103e924a01285e89b3.mockapi.io/items?${
 				categoryId > 0 ? `category=${categoryId}` : ''
-			}&sortBy=${sortType.sort}&order=${sortType.order}&search=${search}`
+			}&sortBy=${sortType.sort}&order=${
+				sortType.order
+			}&search=${search}&page=${currentPage}&limit=${4}`
 		)
 			.then(res => res.json())
 			.then(arr => {
@@ -31,7 +35,7 @@ const Home = ({ searchValue }) => {
 				setIsLoading(false);
 				//window.scrollTo(0, 0);
 			});
-	}, [categoryId, sortType, searchValue]);
+	}, [categoryId, sortType, searchValue, currentPage]);
 
 	const skeletons = [...new Array(12)].map((_, index) => <Skeleton key={index} />);
 
@@ -66,6 +70,7 @@ const Home = ({ searchValue }) => {
 				{/* <PizzaBlock title='Жульен' price={550} />
 						<PizzaBlock title='C креветками' price={480} /> */}
 			</div>
+			<Pagination onPageChange={number => setCurrentPage(number)} />
 		</div>
 	);
 };

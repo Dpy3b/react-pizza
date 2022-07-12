@@ -1,0 +1,36 @@
+.root {
+	li {
+		display: inline-flex;
+&:not(:last-child) {
+				margin-right: 10px;
+			}
+		a {
+			//display: inline-flex;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 40px;
+			width: 40px;
+			padding: 10px;
+			border: 1px solid orange;
+			border-radius: 30px;
+			cursor: pointer;
+			transition: background-color 0.3s ease 0s, color 0.3s ease 0s;
+
+			&:hover {
+				background-color: crimson;
+				color: darkorange;
+				font-weight: 800;
+			}
+		}
+	}
+	:global {
+		.selected {
+			a {
+				background-color: crimson;
+				color: darkorange;
+				font-weight: 800;
+			}
+		}
+	}
+}
