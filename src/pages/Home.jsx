@@ -6,26 +6,53 @@ import Sort from '../components/Sort';
 
 import '../scss/app.scss';
 
-const Home = () => {
+const Home = ({ searchValue }) => {
 	const [items, setItems] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [categoryId, setCategoryId] = useState(0);
-	const [sortType, setSortType] = useState({ name: 'популярности', sort: 'rating', order: 'desc' });
+	const [sortType, setSortType] = useState({
+		name: 'популярности',
+		sort: 'rating',
+		order: 'desc',
+	});
+
+	const search = searchValue ? searchValue : '';
 
 	useEffect(() => {
 		setIsLoading(true);
 		fetch(
 			`https://62cac4103e924a01285e89b3.mockapi.io/items?${
 				categoryId > 0 ? `category=${categoryId}` : ''
-			}&sortBy=${sortType.sort}&order=${sortType.order}`
+			}&sortBy=${sortType.sort}&order=${sortType.order}&search=${search}`
 		)
 			.then(res => res.json())
 			.then(arr => {
 				setItems(arr);
 				setIsLoading(false);
-				window.scrollTo(0, 0);
+				//window.scrollTo(0, 0);
 			});
-	}, [categoryId, sortType]);
+	}, [categoryId, sortType, searchValue]);
+
+	const skeletons = [...new Array(12)].map((_, index) => <Skeleton key={index} />);
+
+	const pizzas = items
+		/* .filter(obj => {
+			if (obj.title.toLowerCase().includes(searchValue)) {
+				return true;
+			}
+			return false;
+		})  */ // подобная фильтрация эффективна только при ограниченном кол-ве айтемов при статичном массиве, иначе лучше обращаться через бэк
+		.map(({ title, price, imageUrl, sizes, types, id }) => (
+			<PizzaBlock
+				key={id}
+				title={title}
+				price={price}
+				imageUrl={imageUrl}
+				sizes={sizes}
+				types={types}
+			/>
+		));
+
 	return (
 		<div className='container'>
 			<div className='content__top'>
@@ -34,18 +61,7 @@ const Home = () => {
 			</div>
 			<h2 className='content__title'>Все пиццы</h2>
 			<div className='content__items'>
-				{isLoading
-					? [...new Array(12)].map((_, index) => <Skeleton key={index} />)
-					: items.map(({ title, price, imageUrl, sizes, types, id }) => (
-							<PizzaBlock
-								key={id}
-								title={title}
-								price={price}
-								imageUrl={imageUrl}
-								sizes={sizes}
-								types={types}
-							/>
-					  ))}
+				{isLoading ? skeletons : pizzas}
 
 				{/* <PizzaBlock title='Жульен' price={550} />
 						<PizzaBlock title='C креветками' price={480} /> */}
