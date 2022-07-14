@@ -1,32 +1,47 @@
-import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import {setSort} from '../redux/slices/filterSlice'
+import { setSort } from '../redux/slices/filterSlice';
+
+export const sortList = [
+	{ id: 0, name: 'популярности (по убыванию)', sortProperty: 'rating', order: 'desc' },
+	{ id: 1, name: 'популярности (по возрастанию)', sortProperty: 'rating', order: 'asc' },
+	{ id: 2, name: 'цене (по убыванию)', sortProperty: 'price', order: 'desc' },
+	{ id: 3, name: 'цене (по возрастанию)', sortProperty: 'price', order: 'asc' },
+	{ id: 4, name: 'алфавиту (по убыванию)', sortProperty: 'title', order: 'desc' },
+	{ id: 5, name: 'алфавиту (по возрастанию)', sortProperty: 'title', order: 'asc' },
+];
+
 const Sort = (/* { value, onChangeSort } */) => {
-const dispatch = useDispatch()
-const sort = useSelector(state => state.filter.sort)
+	const dispatch = useDispatch();
+	const sort = useSelector(state => state.filter.sort);
+
+	const sortRef = useRef();
 
 	const [open, setOpen] = useState(false);
 	//const [selected, setSelected] = useState(0);
-	const list = [
-		{ id: 0, name: 'популярности (по убыванию)', sortProperty: 'rating', order: 'desc' },
-		{ id: 1, name: 'популярности (по возрастанию)', sortProperty: 'rating', order: 'asc' },
-		{ id: 2, name: 'цене (по убыванию)', sortProperty: 'price', order: 'desc' },
-		{ id: 3, name: 'цене (по возрастанию)', sortProperty: 'price', order: 'asc' },
-		{ id: 4, name: 'алфавиту (по убыванию)', sortProperty: 'title', order: 'desc' },
-		{ id: 5, name: 'алфавиту (по возрастанию)', sortProperty: 'title', order: 'asc' },
-	];
+
 	//const sortName = list[value].name;
 
 	const onClickListItem = obj => {
 		//setSelected(i)
-		/* onChangeSort(i) */;
-
-		dispatch(setSort(obj))
+		/* onChangeSort(i) */ dispatch(setSort(obj));
 		setOpen(false);
 	};
+
+	useEffect(() => {
+		const handleClickOutside = e => {
+			if (!e.path.includes(sortRef.current)) {
+				setOpen(false);
+			}
+		};
+
+		document.body.addEventListener('click', handleClickOutside);
+		return () => document.body.removeEventListener('click', handleClickOutside);
+	}, []);
+
 	return (
-		<div className='sort'>
+		<div ref={sortRef} className='sort'>
 			<div className='sort__label'>
 				<svg
 					width='10'
@@ -41,12 +56,12 @@ const sort = useSelector(state => state.filter.sort)
 					/>
 				</svg>
 				<b>Сортировка по:</b>
-				<span onClick={() => setOpen(!open)}>{/* value.name */sort.name}</span>
+				<span onClick={() => setOpen(!open)}>{/* value.name */ sort.name}</span>
 			</div>
 			{open && (
 				<div className='sort__popup'>
 					<ul>
-						{list.map((obj, i) => (
+						{sortList.map((obj, i) => (
 							<li
 								key={i}
 								onClick={() => onClickListItem(obj)}

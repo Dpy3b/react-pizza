@@ -37,7 +37,7 @@ body {
 		grid-template-rows: repeat(1, 1fr);
 		grid-column-gap: 11px;
 		grid-row-gap: 20px;
-		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 		/* @media (max-width: 1400px){
       grid-template-columns: repeat(3, 1fr);
     }
@@ -88,7 +88,9 @@ body {
 
 .cart {
     .content__items {
-        display: block;
+        display: flex;
+		flex-direction: column;
+		//grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     }
 	&__top {
 		display: flex;
