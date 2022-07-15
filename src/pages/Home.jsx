@@ -1,26 +1,26 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import Categories from '../components/Categories';
 import PizzaBlock from '../components/PizzaBlock/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Sort, { sortList } from '../components/Sort';
 
-import axios from 'axios';
 import qs from 'qs';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { SearchContext } from '../App';
 import Pagination from '../components/Pagination/Pagination';
 import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
+import { fetchPizzas } from '../redux/slices/pizzaSlice';
 import '../scss/app.scss';
 const Home = (/* { searchValue } */) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const isSearch = useRef(false);
-const isMounted = useRef(false)
+	const isMounted = useRef(false);
 
 	const { searchValue } = useContext(SearchContext);
-	const [items, setItems] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
+	//const [items, setItems] = useState([]);
+	//const [isLoading, setIsLoading] = useState(true);
 
 	//const [categoryId, setCategoryId] = useState(0); // достаем из редакс тулкита через юзселектор
 	const { categoryId, sortType, order, currentPage } = useSelector(state => ({
@@ -30,6 +30,9 @@ const isMounted = useRef(false)
 		currentPage: state.filter.currentPage,
 	}));
 
+	const { items, status } = useSelector(state => state.pizza);
+
+	// если изменили епараметры и был первый рендер
 	useEffect(() => {
 		if (isMounted.current) {
 			const queryString = qs.stringify({
@@ -41,9 +44,13 @@ const isMounted = useRef(false)
 			navigate(`?${queryString}`);
 		}
 		isMounted.current = true;
+
+		if (!window.location.search) {
+			fetchPizzas();
+		}
 	}, [categoryId, sortType, currentPage, order]);
 
-
+	// если был первый рендер, проверяем урл параметры и сохраняем в редаксе
 	useEffect(() => {
 		if (window.location.search) {
 			const params = qs.parse(window.location.search.substring(1));
@@ -58,15 +65,22 @@ const isMounted = useRef(false)
 			);
 			isSearch.current = true;
 		}
+		/* if (!window.location.search) {
+			fetchPizzas()
+		} */
 	}, []);
 
+	// если был первый недер, то запрашиваем пиццы
 	useEffect(() => {
 		if (!isSearch.current) {
-			fetchPizzas();
+			getPizzas();
 		}
 		isSearch.current = false;
 	}, [categoryId, sortType, searchValue, currentPage, order]);
 
+	useEffect(() => {
+		getPizzas();
+	}, []);
 	/*
 	const [sortType, setSortType] = useState({
 		name: 'популярности',
@@ -82,18 +96,11 @@ const isMounted = useRef(false)
 		dispatch(setCurrentPage(number));
 	};
 
-	const fetchPizzas = () => {
-		setIsLoading(true);
-		axios
-			.get(
-				`https://62cac4103e924a01285e89b3.mockapi.io/items?${
-					categoryId > 0 ? `category=${categoryId}` : ''
-				}&sortBy=${sortType}&order=${order}&search=${search}&page=${currentPage}&limit=${4}`
-			)
-			.then(res => {
-				setItems(res.data);
-				setIsLoading(false);
-			});
+	const getPizzas = async () => {
+		dispatch(fetchPizzas({ categoryId, sortType, order, currentPage, search }));
+
+		//setItems(res.data);
+		//setIsLoading(false);
 	};
 	/* const onChangeSort = sortType => {
 		dispatch(setSort(sortType))
@@ -116,7 +123,6 @@ const isMounted = useRef(false)
 			});
 	}, [categoryId, sortType, searchValue, currentPage, order]); */
 
-
 	const skeletons = [...new Array(12)].map((_, index) => <Skeleton key={index} />);
 
 	const pizzas = items
@@ -126,8 +132,9 @@ const isMounted = useRef(false)
 			}
 			return false;
 		})  */ // подобная фильтрация эффективна только при ограниченном кол-ве айтемов при статичном массиве, иначе лучше обращаться через бэк
-		.map(({ title, price, imageUrl, sizes, types, id}) => (
+		.map(({ title, price, imageUrl, sizes, types, id }) => (
 			<PizzaBlock
+				id={id}
 				key={id}
 				title={title}
 				price={price}
@@ -144,12 +151,17 @@ const isMounted = useRef(false)
 				<Sort /* value={sortType} onChangeSort={i => setSortType(i)} */ />
 			</div>
 			<h2 className='content__title'>Все пиццы</h2>
-			<div className='content__items'>
-				{isLoading ? skeletons : pizzas}
+			{status === 'error' ? (
+				<div>пицц нету</div>
+			) : (
+				<div className='content__items'>
+					{/* isLoading  */ status === 'loading' ? skeletons : pizzas}
 
-				{/* <PizzaBlock title='Жульен' price={550} />
+					{/* <PizzaBlock title='Жульен' price={550} />
 						<PizzaBlock title='C креветками' price={480} /> */}
-			</div>
+				</div>
+			)}
+
 			<Pagination currentPage={currentPage} onPageChange={onPageChange} />
 		</div>
 	);
