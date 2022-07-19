@@ -6,7 +6,7 @@ import Sort, { sortList } from '../components/Sort';
 
 import qs from 'qs';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { SearchContext } from '../App';
 import Pagination from '../components/Pagination/Pagination';
 import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
@@ -18,16 +18,17 @@ const Home = (/* { searchValue } */) => {
 	const isSearch = useRef(false);
 	const isMounted = useRef(false);
 
-	const { searchValue } = useContext(SearchContext);
+	//const { searchValue } = useContext(SearchContext);
 	//const [items, setItems] = useState([]);
 	//const [isLoading, setIsLoading] = useState(true);
 
 	//const [categoryId, setCategoryId] = useState(0); // достаем из редакс тулкита через юзселектор
-	const { categoryId, sortType, order, currentPage } = useSelector(state => ({
+	const { categoryId, sortType, order, currentPage, searchValue } = useSelector(state => ({
 		categoryId: state.filter.categoryId,
 		sortType: state.filter.sort.sortProperty,
 		order: state.filter.sort.order,
 		currentPage: state.filter.currentPage,
+		searchValue: state.filter.searchValue
 	}));
 
 	const { items, status } = useSelector(state => state.pizza);
@@ -133,15 +134,16 @@ const Home = (/* { searchValue } */) => {
 			return false;
 		})  */ // подобная фильтрация эффективна только при ограниченном кол-ве айтемов при статичном массиве, иначе лучше обращаться через бэк
 		.map(({ title, price, imageUrl, sizes, types, id }) => (
-			<PizzaBlock
-				id={id}
-				key={id}
-				title={title}
-				price={price}
-				imageUrl={imageUrl}
-				sizes={sizes}
-				types={types}
-			/>
+			<Link key={id} to={`/pizza/${id}`}>
+				<PizzaBlock
+					id={id}
+					title={title}
+					price={price}
+					imageUrl={imageUrl}
+					sizes={sizes}
+					types={types}
+				/>
+			</Link>
 		));
 
 	return (

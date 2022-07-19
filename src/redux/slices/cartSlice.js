@@ -46,6 +46,9 @@ export const cartSlice = createSlice({
 	},
 });
 
+export const selectCart = state => state.cart
+export const selectCartTotalPrice = state => state.cart.totalPrice
+
 // Action creators are generated for each case reducer function
 export const { addItem, minusItem, removeItem, clearItems } = cartSlice.actions;
 

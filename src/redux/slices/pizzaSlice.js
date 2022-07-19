@@ -12,6 +12,7 @@ export const fetchPizzas = createAsyncThunk(
 				categoryId > 0 ? `category=${categoryId}` : ''
 			}&sortBy=${sortType}&order=${order}&search=${search}&page=${currentPage}&limit=${4}`
 		);
+
 		return data;
 	}
 );
