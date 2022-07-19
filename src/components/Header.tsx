@@ -1,4 +1,5 @@
 
+import { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import logoSvg from '../assets/img/pizza-logo.svg';
@@ -7,12 +8,12 @@ import Search from './Search/Search';
 
 
 
-const Header = (/* {searchValue, setSearchValue} */) => {
+const Header:FC = (/* {searchValue, setSearchValue} */) => {
 	const { items, totalPrice } = useSelector(selectCart); // state => state.cart
 	//const pathname = window.location.pathname
 const {pathname} = useLocation()
 
-	const totalCount = useSelector(state => state.cart.totalCount);
+	const totalCount = useSelector((state: any) => state.cart.totalCount);
 	//const totalCount = items
 
 	return (

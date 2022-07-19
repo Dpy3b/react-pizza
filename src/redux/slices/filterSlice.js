@@ -1,5 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+
+/* export interface IRootState {
+	searchValue: string
+	categoryId: number
+	currentPage: number
+	sort: {
+		name: string
+		sortProperty: string
+		desc: string
+	}
+}
+ */
 const initialState = {
 	searchValue: '',
 	categoryId: 0,

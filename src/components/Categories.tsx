@@ -1,6 +1,13 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 
-const Categories = ({ value, onChangeCategory }) => {
+
+
+interface ICategoriesProps{
+	value: number
+	onChangeCategory: (i: number) => void
+}
+
+const Categories: FC<ICategoriesProps> = ({ value, onChangeCategory }) => {
 	//const [activeIndex, setActiveIndex] = useState(0);
 
 	const categories = ['Все', 'Мясные', 'Вегетарианские', 'Гриль', 'Острые', 'Закрытые'];

@@ -1,9 +1,20 @@
-import { useEffect, useRef, useState } from 'react';
+import { FC, MouseEvent, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { setSort } from '../redux/slices/filterSlice';
 
-export const sortList = [
+type SortItem = {
+	id: number
+	name: string;
+	sortProperty: string
+	order: string;
+};
+
+type PopupClick = MouseEvent & {
+	path: Node[]
+};
+
+export const sortList: SortItem[] = [
 	{ id: 0, name: 'популярности (по убыванию)', sortProperty: 'rating', order: 'desc' },
 	{ id: 1, name: 'популярности (по возрастанию)', sortProperty: 'rating', order: 'asc' },
 	{ id: 2, name: 'цене (по убыванию)', sortProperty: 'price', order: 'desc' },
@@ -12,31 +23,34 @@ export const sortList = [
 	{ id: 5, name: 'алфавиту (по возрастанию)', sortProperty: 'title', order: 'asc' },
 ];
 
-const Sort = (/* { value, onChangeSort } */) => {
+const Sort: FC = (/* { value, onChangeSort } */) => {
 	const dispatch = useDispatch();
-	const sort = useSelector(state => state.filter.sort);
+	const sort = useSelector((state: any) => state.filter.sort);
 
-	const sortRef = useRef();
+	const sortRef = useRef<HTMLDivElement>(null); // нужно либо нулл либо хтмл див елемент
 
 	const [open, setOpen] = useState(false);
 	//const [selected, setSelected] = useState(0);
 
 	//const sortName = list[value].name;
 
-	const onClickListItem = obj => {
+	const onClickListItem = (obj: SortItem) => {
 		//setSelected(i)
 		/* onChangeSort(i) */ dispatch(setSort(obj));
 		setOpen(false);
 	};
 
 	useEffect(() => {
-		const handleClickOutside = e => {
-			if (!e.path.includes(sortRef.current)) {
+		const handleClickOutside = (event: MouseEvent) => {
+			const _event = event as PopupClick;
+
+			if (sortRef.current && !_event.path.includes(sortRef.current)) {
 				setOpen(false);
 			}
 		};
-
+		// @ts-ignore
 		document.body.addEventListener('click', handleClickOutside);
+		// @ts-ignore
 		return () => document.body.removeEventListener('click', handleClickOutside);
 	}, []);
 

@@ -1,6 +1,13 @@
+import { FC } from 'react';
 import ReactPaginate from 'react-paginate';
 import styles from './Pagination.module.scss';
-const Pagination = ({ onPageChange,currentPage}) => {
+
+interface IPaginationProps {
+	onPageChange: (page: number) => void; // так пишем, когда функция ничего не возвращает
+	currentPage: number;
+}
+
+const Pagination: FC<IPaginationProps> = ({ onPageChange, currentPage }) => {
 	return (
 		<ReactPaginate
 			className={styles.root}
@@ -10,7 +17,7 @@ const Pagination = ({ onPageChange,currentPage}) => {
 			pageRangeDisplayed={4}
 			pageCount={3}
 			forcePage={currentPage - 1}
-			renderOnZeroPageCount={null}
+			/* renderOnZeroPageCount={null} походу лишний проп */
 			onPageChange={event => {
 				onPageChange(event.selected + 1);
 			}}

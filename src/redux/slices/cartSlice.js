@@ -1,5 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+
+/* export interface ICartState {
+	totalPrice: number;
+	items: [];
+	totalCount: number;
+}
+ */
 const initialState = {
 	totalPrice: 0,
 	items: [],

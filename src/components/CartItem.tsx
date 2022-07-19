@@ -1,10 +1,20 @@
-import React from 'react';
+import { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem, clearItems, minusItem, removeItem } from '../redux/slices/cartSlice';
+import { addItem, minusItem, removeItem } from '../redux/slices/cartSlice';
 
-const CartItem = ({ id, title, type, price, count, imageUrl, size }) => {
+interface ICartItemProps {
+	id: number;
+	title: string;
+	type: string;
+	price: number;
+	count: number;
+	imageUrl: string;
+	size: number;
+}
+
+const CartItem: FC<ICartItemProps> = ({ id, title, type, price, count, imageUrl, size }) => {
 	const dispatch = useDispatch();
-	const totalPrice= useSelector(state => state.cart.totalPrice);
+	const totalPrice = useSelector((state: any) => state.cart.totalPrice);
 
 	const onClickPlus = () => {
 		dispatch(addItem({ id }));
@@ -14,8 +24,8 @@ const CartItem = ({ id, title, type, price, count, imageUrl, size }) => {
 	};
 
 	const onClickRemove = () => {
-		dispatch(removeItem(id))
-	}
+		dispatch(removeItem(id));
+	};
 
 	return (
 		<div className='cart__item'>
@@ -24,7 +34,9 @@ const CartItem = ({ id, title, type, price, count, imageUrl, size }) => {
 			</div>
 			<div className='cart__item-info'>
 				<h3>{title}</h3>
-				<p>{type}, {size}</p>
+				<p>
+					{type}, {size}
+				</p>
 			</div>
 			<div className='cart__item-count'>
 				<button

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from 'react';
+import { FC, useContext, useEffect, useRef } from 'react';
 import Categories from '../components/Categories';
 import PizzaBlock from '../components/PizzaBlock/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
@@ -7,12 +7,12 @@ import Sort, { sortList } from '../components/Sort';
 import qs from 'qs';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { SearchContext } from '../App';
+//import { SearchContext } from '../App';
 import Pagination from '../components/Pagination/Pagination';
 import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
 import { fetchPizzas } from '../redux/slices/pizzaSlice';
 import '../scss/app.scss';
-const Home = (/* { searchValue } */) => {
+const Home: FC = (/* { searchValue } */) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const isSearch = useRef(false);
@@ -23,7 +23,7 @@ const Home = (/* { searchValue } */) => {
 	//const [isLoading, setIsLoading] = useState(true);
 
 	//const [categoryId, setCategoryId] = useState(0); // достаем из редакс тулкита через юзселектор
-	const { categoryId, sortType, order, currentPage, searchValue } = useSelector(state => ({
+	const { categoryId, sortType, order, currentPage, searchValue } = useSelector((state: any) => ({
 		categoryId: state.filter.categoryId,
 		sortType: state.filter.sort.sortProperty,
 		order: state.filter.sort.order,
@@ -31,7 +31,7 @@ const Home = (/* { searchValue } */) => {
 		searchValue: state.filter.searchValue
 	}));
 
-	const { items, status } = useSelector(state => state.pizza);
+	const { items, status } = useSelector((state: any) => state.pizza);
 
 	// если изменили епараметры и был первый рендер
 	useEffect(() => {
@@ -89,15 +89,16 @@ const Home = (/* { searchValue } */) => {
 		order: 'desc',
 	});
 	 */
-	const onChangeCategory = id => {
+	const onChangeCategory = (id: number) => {
 		dispatch(setCategoryId(id));
 	};
 
-	const onPageChange = number => {
+	const onPageChange = (number: number) => {
 		dispatch(setCurrentPage(number));
 	};
 
 	const getPizzas = async () => {
+		// @ts-ignore
 		dispatch(fetchPizzas({ categoryId, sortType, order, currentPage, search }));
 
 		//setItems(res.data);
@@ -124,7 +125,7 @@ const Home = (/* { searchValue } */) => {
 			});
 	}, [categoryId, sortType, searchValue, currentPage, order]); */
 
-	const skeletons = [...new Array(12)].map((_, index) => <Skeleton key={index} />);
+	const skeletons = [...new Array(4)].map((_, index) => <Skeleton key={index} />);
 
 	const pizzas = items
 		/* .filter(obj => {
@@ -133,6 +134,7 @@ const Home = (/* { searchValue } */) => {
 			}
 			return false;
 		})  */ // подобная фильтрация эффективна только при ограниченном кол-ве айтемов при статичном массиве, иначе лучше обращаться через бэк
+		//@ts-ignore
 		.map(({ title, price, imageUrl, sizes, types, id }) => (
 			<Link key={id} to={`/pizza/${id}`}>
 				<PizzaBlock
