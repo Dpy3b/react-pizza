@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 
 /* export interface IRootState {
@@ -11,8 +11,26 @@ import { createSlice } from '@reduxjs/toolkit';
 		desc: string
 	}
 }
+
+
+
  */
-const initialState = {
+
+
+export type SortBy = {
+	name: string;
+	sortProperty: string;
+	order: string;
+};
+export interface IFilterState {
+	searchValue: string;
+	categoryId: number;
+	currentPage: number;
+	sort: SortBy | undefined;
+	order: string;
+}
+
+const initialState: IFilterState = {
 	searchValue: '',
 	categoryId: 0,
 	currentPage: 1,
@@ -21,6 +39,7 @@ const initialState = {
 		sortProperty: 'rating',
 		order: 'desc',
 	},
+	order: 'desc'
 };
 
 export const filterSlice = createSlice({
@@ -28,26 +47,28 @@ export const filterSlice = createSlice({
 	name: 'filter',
 	initialState, // то же, что и initialState: initialState, деструктуризация ЕПТА
 	reducers: {
-		setSearchValue(state, action){
-			state.searchValue = action.payload
+		setSearchValue(state, action: PayloadAction<string>) {
+			state.searchValue = action.payload;
 		},
-		setCategoryId(state, action) {
+		setCategoryId(state, action: PayloadAction<number>) {
 			state.categoryId = action.payload;
 		},
-		setSort(state, action) {
+		setSort(state, action: PayloadAction<SortBy>) {
 			state.sort = action.payload;
 		},
-		setCurrentPage(state, action) {
+		setCurrentPage(state, action: PayloadAction<number>) {
 			state.currentPage = action.payload;
 		},
-		setFilters(state, action){
+		setFilters(state, action: PayloadAction<IFilterState>) {
 			state.currentPage = Number(action.payload.currentPage);
 			state.sort = action.payload.sort;
-			state.categoryId = Number(action.payload.categoryId)
-			//state.order = Number(action.payload.order)
-		}
+			state.categoryId = Number(action.payload.categoryId);
+			state.order = action.payload.order
+		},
 	},
 });
+
+// ВОТ ТУТ МОЖНО ДОБАВАИТ СЕЛЕКТОРЫ ПО ЖЕЛАНИЮ
 
 // Action creators are generated for each case reducer function
 export const { setCategoryId, setSort , setCurrentPage, setFilters, setSearchValue} = filterSlice.actions;

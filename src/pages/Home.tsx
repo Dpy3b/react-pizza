@@ -2,19 +2,20 @@ import { FC, useContext, useEffect, useRef } from 'react';
 import Categories from '../components/Categories';
 import PizzaBlock from '../components/PizzaBlock/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
-import Sort, { sortList } from '../components/Sort';
+import Sort, { SortItem, sortList } from '../components/Sort';
 
 import qs from 'qs';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 //import { SearchContext } from '../App';
 import Pagination from '../components/Pagination/Pagination';
-import { setCategoryId, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
-import { fetchPizzas } from '../redux/slices/pizzaSlice';
+import { IFilterState, setCategoryId, setCurrentPage, setFilters, SortBy } from '../redux/slices/filterSlice';
+import { fetchPizzas} from '../redux/slices/pizzaSlice';
 import '../scss/app.scss';
+import { useAppDispatch } from '../redux/store';
 const Home: FC = (/* { searchValue } */) => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const isSearch = useRef(false);
 	const isMounted = useRef(false);
 
@@ -47,21 +48,22 @@ const Home: FC = (/* { searchValue } */) => {
 		isMounted.current = true;
 
 		if (!window.location.search) {
-			fetchPizzas();
+			dispatch(fetchPizzas({ categoryId, sortType, order, currentPage, search }));
 		}
 	}, [categoryId, sortType, currentPage, order]);
 
 	// если был первый рендер, проверяем урл параметры и сохраняем в редаксе
 	useEffect(() => {
 		if (window.location.search) {
-			const params = qs.parse(window.location.search.substring(1));
+			const params= qs.parse(window.location.search.substring(1));
 			const sort = sortList.find(obj => obj.sortProperty === params.sortProperty);
 			const order = sortList.find(obj => obj.order === params.order);
 			dispatch(
 				setFilters({
 					...params,
 					sort,
-					order,
+					//@ts-ignore
+					order
 				})
 			);
 			isSearch.current = true;
@@ -98,7 +100,6 @@ const Home: FC = (/* { searchValue } */) => {
 	};
 
 	const getPizzas = async () => {
-		// @ts-ignore
 		dispatch(fetchPizzas({ categoryId, sortType, order, currentPage, search }));
 
 		//setItems(res.data);
@@ -136,8 +137,9 @@ const Home: FC = (/* { searchValue } */) => {
 		})  */ // подобная фильтрация эффективна только при ограниченном кол-ве айтемов при статичном массиве, иначе лучше обращаться через бэк
 		//@ts-ignore
 		.map(({ title, price, imageUrl, sizes, types, id }) => (
-			<Link key={id} to={`/pizza/${id}`}>
+
 				<PizzaBlock
+					key={id}
 					id={id}
 					title={title}
 					price={price}
@@ -145,7 +147,6 @@ const Home: FC = (/* { searchValue } */) => {
 					sizes={sizes}
 					types={types}
 				/>
-			</Link>
 		));
 
 	return (
