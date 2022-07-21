@@ -4,14 +4,16 @@ import { Link } from 'react-router-dom';
 import CartEmpty from '../components/CartEmpty';
 import CartItem from '../components/CartItem';
 import { selectCart } from '../redux/slices/cart/selectors';
+import { clearItems } from '../redux/slices/cart/slice';
 import { CartItemType } from '../redux/slices/cart/types';
 
 const Cart: FC = () => {
+	console.log('пошел рендер')
 	const dispatch = useDispatch();
 	const { totalPrice, /* totalCount */ items } = useSelector(selectCart);
  const totalCount = items.reduce((sum:number, item: CartItemType) => sum + item.count, 0)
 	const onClickClear = () => {
-		/* dispatch(clearItems()); */
+		dispatch(clearItems());
 	};
 	if (!totalCount) {
 		return <CartEmpty />;
