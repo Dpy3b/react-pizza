@@ -2,7 +2,7 @@ import debounce from 'lodash.debounce';
 import { ChangeEvent, FC, MouseEvent, useCallback, useRef, useState } from 'react';
 //import { SearchContext } from '../../App';
 import { useDispatch } from 'react-redux';
-import { setSearchValue } from '../../redux/slices/filterSlice';
+import { setSearchValue } from '../../redux/slices/filter/slice';
 import styles from './Search.module.scss';
 //
 

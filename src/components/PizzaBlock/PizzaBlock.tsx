@@ -1,8 +1,9 @@
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-
-import { addItem, CartItemType } from '../../redux/slices/cartSlice';
+import { addItem } from '../../redux/slices/cart/slice';
+import { CartItemType } from '../../redux/slices/cart/types';
+import { RootState } from '../../redux/store';
 
 interface IPizzaBlockProps {
 	id: string;
@@ -16,7 +17,7 @@ interface IPizzaBlockProps {
 
 const PizzaBlock:FC<IPizzaBlockProps> = ({ id, title, price, imageUrl, sizes, types, rating }) => {
 	const dispatch = useDispatch();
-	const cartItem = useSelector((state: any) => state.cart.items.find((obj: any) => obj.id === id));
+	const cartItem = useSelector((state: RootState) => state.cart.items.find((obj: CartItemType) => obj.id === id));
 	const typeNames = ['тонкое', 'традиционное'];
 	const [activeType, setActiveType] = useState(0);
 	const [activeSize, setActiveSize] = useState(0);

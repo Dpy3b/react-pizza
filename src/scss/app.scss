@@ -26,9 +26,9 @@ body {
 
 	&__title {
 		margin: 35px 0;
-        font-weight: 800;
-        margin-top: 60px;
-        margin-bottom: 50px;
+		font-weight: 800;
+		margin-top: 60px;
+		margin-bottom: 50px;
 	}
 
 	&__items {
@@ -87,11 +87,11 @@ body {
 }
 
 .cart {
-    .content__items {
-        display: flex;
+	.content__items {
+		display: flex;
 		flex-direction: column;
 		//grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    }
+	}
 	&__top {
 		display: flex;
 		justify-content: space-between;
@@ -102,7 +102,6 @@ body {
 		display: flex;
 		align-items: center;
 		font-size: 32px;
-
 
 		svg {
 			position: relative;
@@ -196,6 +195,27 @@ body {
 				svg {
 					path:first-of-type {
 						display: none;
+					}
+				}
+				&--disabled {
+					opacity: 0.4;
+					border-color: #787878;
+
+					&:active{
+						transform: none
+					}
+					svg path {
+
+						fill: #787878;
+
+					}
+
+					&:hover{
+						cursor: not-allowed;
+						background-color: #fff;
+						svg path {
+							fill: #787878;
+						}
 					}
 				}
 			}

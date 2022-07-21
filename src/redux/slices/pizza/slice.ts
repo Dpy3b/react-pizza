@@ -1,28 +1,7 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { RootState } from '../store';
-
-// omit imports and state <CartItem[], Record<string, string>>
-
-type FetchPizzasArgs = {
-	categoryId: number;
-	sortType: string;
-	order: string;
-	currentPage: number;
-	search: string;
-};
-
-//type FetchPizzasArgs = Record<string, string>
-
-type Pizza = {
-	id: string;
-	title: string;
-	price: number;
-	imageUrl: string;
-	sizes: number[];
-	types: number[];
-	rating?: number;
-};
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { fetchPizzas } from "./asyncActions";
+import { FetchPizzasArgs, Pizza, PizzaSliceState } from "./types";
 
 export enum Status {
 	LOADING = 'loading',
@@ -30,39 +9,11 @@ export enum Status {
 	ERROR = 'error',
 }
 
-interface PizzaSliceState {
-	items: Pizza[];
-	status: Status;
-}
-
 const initialState: PizzaSliceState = {
 	items: [],
 	status: Status.LOADING,
 };
 
-export type SearchPizzaParams = {
-	sortBy: string;
-	order: string;
-	categoryId: number;
-	searchValue: string;
-	currentPage: number;
-	sortProperty: string;
-};
-
-export const fetchPizzas = createAsyncThunk<Pizza[], FetchPizzasArgs>( // returned and thunkArg
-	'pizza/fetchPizzasStatus',
-	async ({ categoryId, sortType, order, currentPage, search } /* : FetchPizzasArgs */) => {
-		//{ categoryId, sortType, order, currentPage, search } = params;
-		// в строке указываем название для асинхронного экшна
-		const { data } = await axios.get<Pizza[]>(
-			`https://62cac4103e924a01285e89b3.mockapi.io/items?${
-				categoryId > 0 ? `category=${categoryId}` : ''
-			}&sortBy=${sortType}&order=${order}&search=${search}&page=${currentPage}&limit=${4}`
-		);
-
-		return data; // as CartItem[];
-	}
-);
 
 export const pizzaSlice = createSlice({
 	// очевидно этот метод создаст нам слайс который будет хранить в себе настройки
@@ -104,7 +55,6 @@ export const pizzaSlice = createSlice({
 		}, */
 });
 
-export const selectPizzaData = (state: RootState) => state.pizza;
 
 // Action creators are generated for each case reducer function
 export const { setItems } = pizzaSlice.actions;

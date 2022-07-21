@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, memo, useState } from 'react';
 
 
 
@@ -7,7 +7,7 @@ interface ICategoriesProps{
 	onChangeCategory: (i: number) => void
 }
 
-const Categories: FC<ICategoriesProps> = ({ value, onChangeCategory }) => {
+const Categories: FC<ICategoriesProps> = memo(({ value, onChangeCategory }) => {
 	//const [activeIndex, setActiveIndex] = useState(0);
 
 	const categories = ['Все', 'Мясные', 'Вегетарианские', 'Гриль', 'Острые', 'Закрытые'];
@@ -30,6 +30,6 @@ const Categories: FC<ICategoriesProps> = ({ value, onChangeCategory }) => {
 			</ul>
 		</div>
 	);
-};
+})
 
 export default Categories;

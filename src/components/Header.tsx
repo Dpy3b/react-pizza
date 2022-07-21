@@ -1,9 +1,11 @@
 
-import { FC } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import logoSvg from '../assets/img/pizza-logo.svg';
-import { selectCart } from '../redux/slices/cartSlice';
+import { selectCart } from '../redux/slices/cart/selectors';
+import { CartItemType } from '../redux/slices/cart/types';
+import { RootState } from '../redux/store';
 import Search from './Search/Search';
 
 
@@ -13,9 +15,20 @@ const Header:FC = (/* {searchValue, setSearchValue} */) => {
 	//const pathname = window.location.pathname
 const {pathname} = useLocation()
 
-	const totalCount = useSelector((state: any) => state.cart.totalCount);
-	//const totalCount = items
+const isMounted = useRef(false)
+	//const totalCount = useSelector((state: RootState) => state.cart.totalCount);
+	const totalCount = items.reduce((sum: number, item: CartItemType) => sum + item.count, 0);
 
+
+
+	useEffect(()=> {
+		if(isMounted.current){
+			const json = JSON.stringify(items);
+			localStorage.setItem('cart', json);
+		}
+
+		isMounted.current = true
+	}, [items])
 	return (
 		<div className='header'>
 			<div className='container'>
@@ -28,7 +41,10 @@ const {pathname} = useLocation()
 						</div>
 					</div>
 				</Link>
-				<Search /* searchValue={searchValue} setSearchValue={setSearchValue}  *//>
+				{pathname !== '/cart' && (
+					<Search /* searchValue={searchValue} setSearchValue={setSearchValue}  */ />
+				)}
+
 				<div className='header__cart'>
 					{' '}
 					{pathname !== '/cart' && (

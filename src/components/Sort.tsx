@@ -1,7 +1,8 @@
-import { FC, MouseEvent, useEffect, useRef, useState } from 'react';
+import { FC, memo, MouseEvent, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { setSort } from '../redux/slices/filter/slice';
+import { RootState } from '../redux/store';
 
-import { setSort } from '../redux/slices/filterSlice';
 
 export type SortItem = {
 	id: number
@@ -23,9 +24,13 @@ export const sortList: SortItem[] = [
 	{ id: 5, name: 'алфавиту (по возрастанию)', sortProperty: 'title', order: 'asc' },
 ];
 
-const Sort: FC = (/* { value, onChangeSort } */) => {
+type SortProps = {
+	value: string
+}
+
+export const Sort: FC< SortProps > = memo((/* { value, onChangeSort } */{ value}) => {
 	const dispatch = useDispatch();
-	const sort = useSelector((state: any) => state.filter.sort);
+	const sort = useSelector((state: RootState) => state.filter.sort);
 
 	const sortRef = useRef<HTMLDivElement>(null); // нужно либо нулл либо хтмл див елемент
 
@@ -79,7 +84,7 @@ const Sort: FC = (/* { value, onChangeSort } */) => {
 							<li
 								key={i}
 								onClick={() => onClickListItem(obj)}
-								className={sort.sortProperty === i ? 'active' : ''}
+								className={sort.sortProperty === obj.sortProperty ? 'active' : ''}
 							>
 								{obj.name}
 							</li>
@@ -89,6 +94,4 @@ const Sort: FC = (/* { value, onChangeSort } */) => {
 			)}
 		</div>
 	);
-};
-
-export default Sort;
+});

@@ -1,34 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { SortType, IFilterState } from "../filter/types";
 
-
-/* export interface IRootState {
-	searchValue: string
-	categoryId: number
-	currentPage: number
-	sort: {
-		name: string
-		sortProperty: string
-		desc: string
-	}
-}
-
-
-
- */
-
-
-export type SortBy = {
-	name: string;
-	sortProperty: string;
-	order: string;
-};
-export interface IFilterState {
-	searchValue: string;
-	categoryId: number;
-	currentPage: number;
-	sort: SortBy | undefined;
-	order: string;
-}
 
 const initialState: IFilterState = {
 	searchValue: '',
@@ -39,8 +11,9 @@ const initialState: IFilterState = {
 		sortProperty: 'rating',
 		order: 'desc',
 	},
-	order: 'desc'
+    order: 'desc'
 };
+
 
 export const filterSlice = createSlice({
 	// очевидно этот метод создаст нам слайс который будет хранить в себе настройки
@@ -53,7 +26,7 @@ export const filterSlice = createSlice({
 		setCategoryId(state, action: PayloadAction<number>) {
 			state.categoryId = action.payload;
 		},
-		setSort(state, action: PayloadAction<SortBy>) {
+		setSort(state, action: PayloadAction<SortType>) {
 			state.sort = action.payload;
 		},
 		setCurrentPage(state, action: PayloadAction<number>) {
@@ -63,7 +36,7 @@ export const filterSlice = createSlice({
 			state.currentPage = Number(action.payload.currentPage);
 			state.sort = action.payload.sort;
 			state.categoryId = Number(action.payload.categoryId);
-			state.order = action.payload.order
+			//state.order = action.payload.order
 		},
 	},
 });
@@ -71,6 +44,7 @@ export const filterSlice = createSlice({
 // ВОТ ТУТ МОЖНО ДОБАВАИТ СЕЛЕКТОРЫ ПО ЖЕЛАНИЮ
 
 // Action creators are generated for each case reducer function
-export const { setCategoryId, setSort , setCurrentPage, setFilters, setSearchValue} = filterSlice.actions;
+export const { setCategoryId, setSort, setCurrentPage, setFilters, setSearchValue } =
+	filterSlice.actions;
 
 export default filterSlice.reducer;
