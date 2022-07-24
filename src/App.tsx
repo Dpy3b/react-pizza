@@ -10,9 +10,9 @@ import './scss/app.scss';
 
 // export const SearchContext = createContext();
 
-const FullPizza = lazy(() => import(/* webpackChunkName: "FullPizza" */'./pages/FullPizza'))
-const NotFound = lazy(()=> import('./pages/NotFound'))
-const Cart = lazy(()=> import('./pages/Cart'))
+const FullPizza = lazy(() => import(/* webpackChunkName: "FullPizza" */ './pages/FullPizza'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const Cart = lazy(() => import('./pages/Cart'));
 
 function App() {
 	//const [searchValue, setSearchValue] = useState('') // контекст ниже нам уже не нужен
@@ -30,32 +30,32 @@ function App() {
 			{/* теперь не передаем сюда эти пропсы, потом вытянем их из контекста */}
 			<div className='content'>
 				<Routes>
-					<Route path='/' element={<Home /* searchValue={searchValue} */ />} />
+					<Route path='/react-pizza' element={<Home /> /* searchValue={searchValue} */}/>
 					<Route
-						path='/cart'
-						element={
-							<Suspense fallback={<div>Загрузка</div>}>
-								<Cart />
-							</Suspense>
-						}
-					/>
-					<Route
-						path='/pizza/:id'
-						element={
-							<Suspense fallback={<div>Загрузка</div>}>
-								<FullPizza />
-							</Suspense>
-						}
-					/>
+							path='/react-pizza/cart'
+							element={
+								<Suspense fallback={<div>Загрузка</div>}>
+									<Cart />
+								</Suspense>
+							}
+						/>
+						<Route
+							path='/react-pizza/pizza/:id'
+							element={
+								<Suspense fallback={<div>Загрузка</div>}>
+									<FullPizza />
+								</Suspense>
+							}
+						/>
 
-					<Route
-						path='*'
-						element={
-							<Suspense fallback={<div>Загрузка</div>}>
-								<NotFound />
-							</Suspense>
-						}
-					/>
+						<Route
+							path='/react-pizza/*'
+							element={
+								<Suspense fallback={<div>Загрузка</div>}>
+									<NotFound />
+								</Suspense>
+							}
+							/>
 				</Routes>
 			</div>
 			{/*  */}

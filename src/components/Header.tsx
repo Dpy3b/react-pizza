@@ -29,10 +29,11 @@ const isMounted = useRef(false)
 
 		isMounted.current = true
 	}, [items])
+	console.log(pathname);
 	return (
 		<div className='header'>
 			<div className='container'>
-				<Link to='/'>
+				<Link to='/react-pizza/'>
 					<div className='header__logo'>
 						<img width='38' src={logoSvg} alt='Pizza logo' />
 						<div>
@@ -41,14 +42,15 @@ const isMounted = useRef(false)
 						</div>
 					</div>
 				</Link>
-				{pathname !== '/cart' && (
+
+				{pathname !== '/react-pizza/cart' && (
 					<Search /* searchValue={searchValue} setSearchValue={setSearchValue}  */ />
 				)}
 
 				<div className='header__cart'>
 					{' '}
-					{pathname !== '/cart' && (
-						<Link to='/cart' className='button button--cart'>
+					{pathname !== '/react-pizza/cart' && (
+						<Link to='/react-pizza/cart' className='button button--cart'>
 							<span>{totalPrice} ₽</span>
 							<div className='button__delimiter'></div>
 							<svg
